@@ -14,6 +14,7 @@ export const errorHandler = (
 			error: err.error,
 			data: null,
 		});
+		return;
 	}
 
 	// Unhandled errors
@@ -24,4 +25,5 @@ export const errorHandler = (
 		error: process.env.NODE_ENV === 'development' ? err : null,
 		data: null,
 	});
+	return;
 };

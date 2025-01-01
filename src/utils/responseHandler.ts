@@ -6,12 +6,13 @@ export const successResponse = (
 	message: string = 'Success',
 	statusCode: number = 200
 ) => {
-	return res.status(statusCode).json({
+	res.status(statusCode).json({
 		status: statusCode,
 		data,
 		message,
 		error: null,
 	});
+	return;
 };
 
 export const errorResponse = (
@@ -20,10 +21,11 @@ export const errorResponse = (
 	statusCode: number = 500,
 	error: any = null
 ) => {
-	return res.status(statusCode).json({
+	res.status(statusCode).json({
 		status: statusCode,
 		data: null,
 		message,
 		error,
 	});
+	return;
 };

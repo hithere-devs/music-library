@@ -1,16 +1,13 @@
-import { Sequelize } from 'sequelize-typescript';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { Sequelize } from 'sequelize';
+import config from '.';
 
 const sequelize = new Sequelize({
-	dialect: 'postgres',
-	host: process.env.DB_HOST,
-	port: parseInt(process.env.DB_PORT || '5432'),
-	database: process.env.DB_NAME,
-	username: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	models: [__dirname + '/../models'],
+	dialect: config.db.dialect,
+	host: config.db.host,
+	port: config.db.port,
+	database: config.db.database,
+	username: config.db.username,
+	password: config.db.password,
 	logging: false,
 });
 
