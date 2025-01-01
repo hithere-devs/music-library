@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 async function bootstrap() {
 	try {
 		await db.syncModels();
-		const app = await createServer();
+		const app = createServer();
 
 		app.listen(PORT, () => {
 			console.log('\n');
