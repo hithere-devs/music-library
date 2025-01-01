@@ -23,7 +23,7 @@ router.get('/health', async (_req, res) => {
 });
 
 // Mount v1 routes under /api/v1
-router.use('/api/v1', v1Routes);
+router.use('/v1', v1Routes);
 
 // Handle 404 for unknown routes
 router.use('*', (_req, res) => {

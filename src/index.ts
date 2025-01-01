@@ -1,24 +1,27 @@
-import { createServer } from './server';
-import sequelize from './config/database';
 import dotenv from 'dotenv';
+import { createServer } from './server';
+import db from './models';
 
 dotenv.config();
+
+const { NODE_ENV } = process.env;
 
 const PORT = process.env.PORT || 3000;
 
 async function bootstrap() {
 	try {
-		// Initialize database connection
-		await sequelize.authenticate();
-
-		// Be careful with this in production, Uncomment to update db schema
-		// await sequelize.sync({ alter: true });
-
+		await db.syncModels();
 		const app = await createServer();
 
 		app.listen(PORT, () => {
 			console.log('\n');
-			console.log(`Server running on http://localhost:${PORT}/api/v1`);
+			console.log(
+				`Server running on ${
+					NODE_ENV === 'production'
+						? 'https://music-library-api.hitheredevs.com/api/v1'
+						: `http://localhost:${PORT}/api/v1`
+				}`
+			);
 			console.log('Database connection established');
 		});
 	} catch (error) {
@@ -32,7 +35,7 @@ process.on('SIGTERM', async () => {
 	console.log(
 		'SIGTERM received. Closing HTTP server and database connection...'
 	);
-	await sequelize.close();
+	await db.sequelize.close();
 	process.exit(0);
 });
 

@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
+import { AuthService } from '../services/auth.service';
 import { BadRequestError } from '../utils/errors';
+import { successResponse } from '../utils/responseHandler';
 
 export interface IAuthController {
 	signup(req: Request, res: Response, next: NextFunction): Promise<void>;
@@ -8,22 +10,19 @@ export interface IAuthController {
 }
 
 export class AuthController implements IAuthController {
+	private authService: AuthService;
+
+	constructor() {
+		this.authService = new AuthService();
+	}
+
 	async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { email, password } = req.body;
 
-			if (!email || !password) {
-				throw new BadRequestError('Email and password are required');
-			}
+			await this.authService.signup(email, password);
 
-			// TODO: Implementation
-
-			res.status(201).json({
-				status: 201,
-				data: null,
-				message: 'User created successfully.',
-				error: null,
-			});
+			successResponse(res, null, 'User created successfully', 201);
 		} catch (error) {
 			next(error);
 		}
@@ -33,20 +32,9 @@ export class AuthController implements IAuthController {
 		try {
 			const { email, password } = req.body;
 
-			if (!email || !password) {
-				throw new BadRequestError('Email and password are required');
-			}
+			const token = await this.authService.login(email, password);
 
-			// TODO: Implementation
-
-			res.status(200).json({
-				status: 200,
-				data: {
-					token: 'jwt_token_here',
-				},
-				message: 'Login successful.',
-				error: null,
-			});
+			successResponse(res, { token }, 'Login successful.');
 		} catch (error) {
 			next(error);
 		}
@@ -54,14 +42,11 @@ export class AuthController implements IAuthController {
 
 	async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			// TODO: Implementation
+			const token = req.headers.authorization?.split(' ')[1];
 
-			res.status(200).json({
-				status: 200,
-				data: null,
-				message: 'User logged out successfully.',
-				error: null,
-			});
+			await this.authService.logout(token!);
+
+			successResponse(res, null, 'User logged out successfully');
 		} catch (error) {
 			next(error);
 		}
