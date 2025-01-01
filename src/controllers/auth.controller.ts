@@ -22,7 +22,7 @@ export class AuthController implements IAuthController {
 
 			await this.authService.signup(email, password);
 
-			successResponse(res, null, 'User created successfully', 201);
+			successResponse(res, null, 'User created successfully.', 201);
 		} catch (error) {
 			next(error);
 		}
@@ -46,7 +46,7 @@ export class AuthController implements IAuthController {
 
 			await this.authService.logout(token!);
 
-			successResponse(res, null, 'User logged out successfully');
+			successResponse(res, null, 'User logged out successfully.');
 		} catch (error) {
 			next(error);
 		}

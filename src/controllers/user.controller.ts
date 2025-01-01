@@ -23,7 +23,7 @@ export class UserController {
 				role as any
 			);
 
-			successResponse(res, users, 'Users retrieved successfully');
+			successResponse(res, users, 'Users retrieved successfully.');
 		} catch (error) {
 			next(error);
 		}
@@ -38,7 +38,7 @@ export class UserController {
 			const { email, password, role } = req.body;
 			await this.userService.addUser(email, password, role);
 
-			successResponse(res, null, 'User created successfully', 201);
+			successResponse(res, null, 'User created successfully.', 201);
 		} catch (error) {
 			next(error);
 		}

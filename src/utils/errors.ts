@@ -35,6 +35,6 @@ export class BadRequestError extends AppError {
 
 export class AlreadyExists extends AppError {
 	constructor(resource: string = 'Resource') {
-		super(409, `${resource} already exists`);
+		super(409, `${resource} already exists.`);
 	}
 }

@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { UserRole } from '../types/enums';
-import { BadRequestError, NotFoundError } from '../utils/errors';
+import { AlreadyExists, BadRequestError, NotFoundError } from '../utils/errors';
 import { generateToken } from '../utils/jwt';
 import db from '../models';
 
@@ -9,7 +9,7 @@ export class AuthService {
 		// Check if user exists
 		const existingUser = await db.User.findOne({ where: { email } });
 		if (existingUser) {
-			throw new BadRequestError('Email already exists');
+			throw new AlreadyExists('Email');
 		}
 
 		// Hash password

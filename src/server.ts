@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import routes from './routes';
 import { errorHandler } from './middleware/error-handler';
 
-export async function createServer() {
+export function createServer() {
 	const app = express();
 
 	// Security middleware
