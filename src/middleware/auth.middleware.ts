@@ -20,7 +20,7 @@ export const authenticate = async (
 		const token = req.headers.authorization?.split(' ')[1];
 
 		if (!token) {
-			throw new UnauthorizedError('No token provided');
+			throw new UnauthorizedError();
 		}
 
 		const decoded = verifyToken(token);
@@ -39,7 +39,7 @@ export const authorize = (...roles: UserRole[]) => {
 		}
 
 		if (!roles.includes(req.user.role)) {
-			throw new ForbiddenError('User not authorized');
+			throw new ForbiddenError('Forbidden Access/Operation not allowed.');
 		}
 
 		next();

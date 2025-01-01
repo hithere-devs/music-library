@@ -32,3 +32,9 @@ export class BadRequestError extends AppError {
 		super(400, message);
 	}
 }
+
+export class AlreadyExists extends AppError {
+	constructor(resource: string = 'Resource') {
+		super(409, `${resource} already exists`);
+	}
+}
