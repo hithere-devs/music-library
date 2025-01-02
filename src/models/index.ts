@@ -6,18 +6,16 @@ import Favorite from './favorite.model';
 import sequelize from '../config/database';
 import { Sequelize } from 'sequelize';
 
-const db: { [key: string]: any } = {};
-
-// Initialize models
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-// Add models
-db.User = User;
-db.Artist = Artist;
-db.Album = Album;
-db.Track = Track;
-db.Favorite = Favorite;
+type DbModels = {
+	User: typeof User;
+	Artist: typeof Artist;
+	Album: typeof Album;
+	Track: typeof Track;
+	Favorite: typeof Favorite;
+	sequelize: typeof sequelize;
+	Sequelize: typeof Sequelize;
+	syncModels: () => Promise<void>;
+};
 
 // Define associations
 Artist.hasMany(Album);
@@ -50,6 +48,15 @@ const syncModels = async () => {
 	}
 };
 
-db.syncModels = syncModels;
+const db: DbModels = {
+	User,
+	Artist,
+	Album,
+	Track,
+	Favorite,
+	sequelize,
+	Sequelize,
+	syncModels,
+} as DbModels;
 
 export default db;

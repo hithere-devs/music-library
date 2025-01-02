@@ -1,5 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
+import Album from './album.model';
+import Track from './track.model';
 
 class Artist extends Model {
 	public id!: string;
@@ -8,6 +10,8 @@ class Artist extends Model {
 	public hidden!: boolean;
 	public created_at!: Date;
 	public updated_at!: Date;
+	public albums!: Album[];
+	public tracks!: Track[];
 }
 
 Artist.init(
