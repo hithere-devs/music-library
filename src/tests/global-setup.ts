@@ -12,6 +12,16 @@ export default async function () {
 		password: 'password',
 	});
 
+	await request.post('/api/v1/signup').send({
+		email: 'editor@example.com',
+		password: 'password',
+	});
+
+	await request.post('/api/v1/signup').send({
+		email: 'viewer@example.com',
+		password: 'password',
+	});
+
 	// Return teardown function
 	return async () => {
 		await db.sequelize.close();

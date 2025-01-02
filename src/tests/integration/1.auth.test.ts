@@ -9,6 +9,15 @@ describe('Authentication', () => {
 				password: 'password123',
 			});
 
+			const _res = await request.post('/api/v1/signup').send({
+				email: 'editor@example.com',
+				password: 'password123',
+			});
+			const __res = await request.post('/api/v1/signup').send({
+				email: 'viewer@example.com',
+				password: 'password123',
+			});
+
 			expect(res.status).toBe(409);
 			expect(res.body.message).toBe('Email already exists.');
 		});

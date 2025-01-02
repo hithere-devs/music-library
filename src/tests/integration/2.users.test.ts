@@ -34,9 +34,18 @@ describe('User Management', () => {
 				.post('/api/v1/users/add-user')
 				.set('Authorization', `Bearer ${adminToken}`)
 				.send({
-					email: 'editor@example.com',
+					email: 'editor1@example.com',
 					password: 'password',
 					role: 'editor',
+				});
+
+			const _res = await request
+				.post('/api/v1/users/add-user')
+				.set('Authorization', `Bearer ${adminToken}`)
+				.send({
+					email: 'viewer1@example.com',
+					password: 'password',
+					role: 'viewer',
 				});
 
 			expect(res.status).toBe(201);
