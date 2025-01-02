@@ -17,3 +17,12 @@ export const loginAsEditor = async () => {
 
 	return res.body.data.token;
 };
+
+export const loginAsViewer = async () => {
+	const res = await request.post('/api/v1/login').send({
+		email: 'viewer@example.com',
+		password: 'password',
+	});
+
+	return res.body.data.token;
+};
