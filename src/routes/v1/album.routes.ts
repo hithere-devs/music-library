@@ -1,4 +1,3 @@
-// src/routes/v1/album.routes.ts
 import { Router } from 'express';
 import { AlbumController } from '../../controllers/album.controller';
 import { authenticate, authorize } from '../../middleware/auth.middleware';

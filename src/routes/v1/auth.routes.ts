@@ -18,11 +18,10 @@ router.post(
 	authController.login.bind(authController)
 );
 
-validateRequest(authSchemas.signup),
-	router.get(
-		'/logout',
-		validateRequest(authSchemas.logout),
-		authController.logout.bind(authController)
-	);
+router.get(
+	'/logout',
+	validateRequest(authSchemas.logout),
+	authController.logout.bind(authController)
+);
 
 export default router;

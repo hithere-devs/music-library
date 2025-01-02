@@ -1,6 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 import { UserRole } from '../types/enums';
+import Favorite from './favorite.model';
 
 class User extends Model {
 	public id!: string;
@@ -9,6 +10,7 @@ class User extends Model {
 	public role!: UserRole;
 	public created_at!: Date;
 	public updated_at!: Date;
+	public favoriates!: Favorite[];
 }
 
 User.init(

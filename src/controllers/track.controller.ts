@@ -1,85 +1,86 @@
 import { Request, Response, NextFunction } from 'express';
-import { AlbumService } from '../services/album.service';
+import { TrackService } from '../services/track.service';
 import { successResponse } from '../utils/responseHandler';
 
-export class AlbumController {
-	private albumService: AlbumService;
+export class TrackController {
+	private trackService: TrackService;
 
 	constructor() {
-		this.albumService = new AlbumService();
+		this.trackService = new TrackService();
 	}
 
-	async getAlbums(
+	async getTracks(
 		req: Request,
 		res: Response,
 		next: NextFunction
 	): Promise<void> {
 		try {
-			const { limit, offset, artist_id, hidden } = req.query;
-			const albums = await this.albumService.getAlbums(
+			const { limit, offset, artist_id, album_id, hidden } = req.query;
+			const tracks = await this.trackService.getTracks(
 				Number(limit) || 5,
 				Number(offset) || 0,
 				artist_id as string,
+				album_id as string,
 				hidden ? hidden === 'true' : undefined
 			);
 
-			successResponse(res, albums, 'Albums retrieved successfully');
+			successResponse(res, tracks, 'Tracks retrieved successfully');
 		} catch (error) {
 			next(error);
 		}
 	}
 
-	async getAlbumById(
+	async getTrackById(
 		req: Request,
 		res: Response,
 		next: NextFunction
 	): Promise<void> {
 		try {
 			const { id } = req.params;
-			const album = await this.albumService.getAlbumById(id);
+			const track = await this.trackService.getTrackById(id);
 
-			successResponse(res, album, 'Album retrieved successfully');
+			successResponse(res, track, 'Track retrieved successfully');
 		} catch (error) {
 			next(error);
 		}
 	}
 
-	async createAlbum(
+	async createTrack(
 		req: Request,
 		res: Response,
 		next: NextFunction
 	): Promise<void> {
 		try {
-			await this.albumService.createAlbum(req.body);
-			successResponse(res, null, 'Album created successfully', 201);
+			await this.trackService.createTrack(req.body);
+			successResponse(res, null, 'Track created successfully', 201);
 		} catch (error) {
 			next(error);
 		}
 	}
 
-	async updateAlbum(
-		req: Request,
-		res: Response,
-		next: NextFunction
-	): Promise<void> {
-		try {
-			const { id } = req.params;
-			await this.albumService.updateAlbum(id, req.body);
-			successResponse(res, null, 'Album updated successfully', 204);
-		} catch (error) {
-			next(error);
-		}
-	}
-
-	async deleteAlbum(
+	async updateTrack(
 		req: Request,
 		res: Response,
 		next: NextFunction
 	): Promise<void> {
 		try {
 			const { id } = req.params;
-			await this.albumService.deleteAlbum(id);
-			successResponse(res, null, 'Album deleted successfully');
+			await this.trackService.updateTrack(id, req.body);
+			successResponse(res, null, 'Track updated successfully', 204);
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	async deleteTrack(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	): Promise<void> {
+		try {
+			const { id } = req.params;
+			const trackName = await this.trackService.deleteTrack(id);
+			successResponse(res, null, `Track:${trackName} deleted successfully`);
 		} catch (error) {
 			next(error);
 		}
