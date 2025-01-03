@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+/**
+ * Req Body Schemas for track-related API endpoints.
+ */
 export const trackSchemas = {
 	getTracks: z.object({
 		query: z.object({

@@ -30,15 +30,25 @@ Track.belongsTo(Album);
 User.hasMany(Favorite);
 Favorite.belongsTo(User);
 
+/**
+ * Synchronizes all models with the database.
+ *
+ * This function authenticates the connection to the database and then synchronizes
+ * the User, Artist, Album, Track, and Favorite models. The `alter` option is used
+ * to make the database schema match the models. This should be used with caution
+ * in production environments as it may lead to data loss.
+ *
+ * @throws Will throw an error if there is an issue with authentication or synchronization.
+ */
 const syncModels = async () => {
 	try {
 		await sequelize.authenticate();
 		// Be careful with this in production
-		await User.sync({ alter: true });
-		await Artist.sync({ alter: true });
-		await Album.sync({ alter: true });
-		await Track.sync({ alter: true });
-		await Favorite.sync({ alter: true });
+		// await User.sync({ alter: true });
+		// await Artist.sync({ alter: true });
+		// await Album.sync({ alter: true });
+		// await Track.sync({ alter: true });
+		// await Favorite.sync({ alter: true });
 
 		console.log('\n');
 

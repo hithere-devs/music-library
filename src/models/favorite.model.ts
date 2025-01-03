@@ -1,7 +1,13 @@
 import { Model, DataTypes } from 'sequelize';
+
+// config
 import sequelize from '../config/database';
-import { FavoriteType } from '../types/enums';
+
+// models
 import User from './user.model';
+
+// types
+import { FavoriteType } from '../types/enums';
 
 class Favorite extends Model {
 	public id!: string;

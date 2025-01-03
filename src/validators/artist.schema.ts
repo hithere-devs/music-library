@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+/**
+ * Req Body Schemas for artist-related API endpoints.
+ */
 export const artistSchemas = {
 	getArtists: z.object({
 		query: z.object({

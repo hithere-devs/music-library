@@ -1,6 +1,8 @@
 import { z } from 'zod';
-import { FavoriteType } from '../types/enums';
 
+/**
+ * Req Body Schemas for favorite-related API endpoints.
+ */
 export const favoriteSchemas = {
 	getFavorites: z.object({
 		params: z.object({

@@ -1,5 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
+
+// config
 import sequelize from '../config/database';
+
+// models
 import Album from './album.model';
 import Track from './track.model';
 

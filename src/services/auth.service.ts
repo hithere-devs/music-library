@@ -1,10 +1,37 @@
 import bcrypt from 'bcryptjs';
-import { UserRole } from '../types/enums';
-import { AlreadyExists, BadRequestError, NotFoundError } from '../utils/errors';
-import { generateToken } from '../utils/jwt';
+
+// models
 import db from '../models';
 
+// utils
+import { AlreadyExists, BadRequestError, NotFoundError } from '../utils/errors';
+import { generateToken } from '../utils/jwt';
+
+// types
+import { UserRole } from '../types/enums';
+
+/**
+ * Service for handling authentication-related operations.
+ *
+ * This service provides methods to handle user signup and login operations.
+ * It interacts with the database to perform the necessary operations and returns the results.
+ *
+ * @class AuthService
+ */
 export class AuthService {
+	/**
+	 * Signs up a new user.
+	 *
+	 * This method handles the signup process by checking if the user already exists,
+	 * hashing the password, and creating a new user in the database. The first user
+	 * to sign up is assigned the admin role.
+	 *
+	 * @param email - The email of the user to sign up.
+	 * @param password - The password of the user to sign up.
+	 * @returns A promise that resolves to void.
+	 *
+	 * @throws Will throw an error if the email already exists.
+	 */
 	async signup(email: string, password: string): Promise<void> {
 		// Check if user exists
 		const existingUser = await db.User.findOne({ where: { email } });
@@ -26,17 +53,29 @@ export class AuthService {
 		});
 	}
 
+	/**
+	 * Logs in a user.
+	 *
+	 * This method handles the login process by finding the user in the database,
+	 * verifying the password, and generating a JWT token if the credentials are valid.
+	 *
+	 * @param email - The email of the user to log in.
+	 * @param password - The password of the user to log in.
+	 * @returns A promise that resolves to a JWT token.
+	 *
+	 * @throws Will throw an error if the user is not found or the password is incorrect.
+	 */
 	async login(email: string, password: string): Promise<string> {
 		// Find user
 		const user = await db.User.findOne({ where: { email } });
 		if (!user) {
-			throw new NotFoundError('User not found');
+			throw new NotFoundError('User not found.');
 		}
 
 		// Verify password
 		const isValidPassword = await bcrypt.compare(password, user.password);
 		if (!isValidPassword) {
-			throw new BadRequestError('Invalid password');
+			throw new BadRequestError('Invalid password.');
 		}
 
 		// Generate token

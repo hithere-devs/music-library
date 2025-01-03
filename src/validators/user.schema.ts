@@ -1,6 +1,11 @@
 import { z } from 'zod';
+
+// types
 import { UserRole } from '../types/enums';
 
+/**
+ * Req Body Schemas for user-related API endpoints.
+ */
 export const userSchemas = {
 	getUsers: z.object({
 		query: z.object({

@@ -1,5 +1,9 @@
 import { Router } from 'express';
+
+// routes
 import v1Routes from './v1';
+
+// config
 import sequelize from '../config/database';
 
 const router = Router();

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+// routes
 import authRoutes from './auth.routes';
 import userRoutes from './user.routes';
 import artistRoutes from './artist.routes';

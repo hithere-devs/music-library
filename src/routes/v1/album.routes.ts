@@ -1,8 +1,16 @@
 import { Router } from 'express';
+
+// controllers
 import { AlbumController } from '../../controllers/album.controller';
+
+// schemas
+import { albumSchemas } from '../../validators/album.schema';
+
+// middleware
 import { authenticate, authorize } from '../../middleware/auth.middleware';
 import { validateRequest } from '../../middleware/validate-request';
-import { albumSchemas } from '../../validators/album.schema';
+
+// types
 import { UserRole } from '../../types/enums';
 
 const router = Router();

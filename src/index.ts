@@ -1,5 +1,9 @@
 import dotenv from 'dotenv';
+
+// server
 import { createServer } from './server';
+
+// models
 import db from './models';
 
 dotenv.config();
