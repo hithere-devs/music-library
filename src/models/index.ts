@@ -40,6 +40,8 @@ const syncModels = async () => {
 		await Track.sync({ alter: true });
 		await Favorite.sync({ alter: true });
 
+		console.log('\n');
+
 		console.log('Database connection established.');
 		console.log('All models were synchronized successfully.');
 	} catch (error) {

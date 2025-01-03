@@ -8,6 +8,12 @@ const sequelize = new Sequelize({
 	database: config.db.database,
 	username: config.db.username,
 	password: config.db.password,
+	dialectOptions: {
+		ssl: {
+			require: true,
+			rejectUnauthorized: false,
+		},
+	},
 	logging: false,
 });
 

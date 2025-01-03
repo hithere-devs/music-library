@@ -14,15 +14,13 @@ async function bootstrap() {
 		const app = createServer();
 
 		app.listen(PORT, () => {
-			console.log('\n');
 			console.log(
 				`Server running on ${
 					NODE_ENV === 'production'
-						? 'https://music-library-api.hitheredevs.com/api/v1'
+						? 'https://music-api.hitheredevs.com/api/v1'
 						: `http://localhost:${PORT}/api/v1`
 				}`
 			);
-			console.log('Database connection established');
 		});
 	} catch (error) {
 		console.error('Failed to start server:', error);
