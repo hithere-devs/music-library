@@ -1,8 +1,16 @@
 import { Router } from 'express';
+
+// controllers
 import { ArtistController } from '../../controllers/artist.controller';
+
+// schemas
+import { artistSchemas } from '../../validators/artist.schema';
+
+// middleware
 import { authenticate, authorize } from '../../middleware/auth.middleware';
 import { validateRequest } from '../../middleware/validate-request';
-import { artistSchemas } from '../../validators/artist.schema';
+
+// types
 import { UserRole } from '../../types/enums';
 
 const router = Router();

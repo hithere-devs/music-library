@@ -1,8 +1,16 @@
 import { Router } from 'express';
+
+// controllers
 import { TrackController } from '../../controllers/track.controller';
+
+// schemas
+import { trackSchemas } from '../../validators/track.schema';
+
+// middlewares
 import { authenticate, authorize } from '../../middleware/auth.middleware';
 import { validateRequest } from '../../middleware/validate-request';
-import { trackSchemas } from '../../validators/track.schema';
+
+// types
 import { UserRole } from '../../types/enums';
 
 const router = Router();

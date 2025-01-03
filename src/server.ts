@@ -2,16 +2,19 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+
+// routes
 import routes from './routes';
+
+// middleware
 import { errorHandler } from './middleware/error-handler';
 
 export function createServer() {
 	const app = express();
 
-	// Security middleware
 	app.use(helmet());
 
-	// CORS configuration
+	// CORS config
 	app.use(
 		cors({
 			origin: '*',
@@ -27,7 +30,6 @@ export function createServer() {
 		);
 	});
 
-	// Body parser
 	app.use(express.json());
 
 	// Request logging

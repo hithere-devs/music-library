@@ -1,8 +1,14 @@
 import { Router } from 'express';
+
+// controllers
 import { FavoriteController } from '../../controllers/favorite.controller';
+
+// schemas
+import { favoriteSchemas } from '../../validators/favorite.schema';
+
+// middlewares
 import { authenticate } from '../../middleware/auth.middleware';
 import { validateRequest } from '../../middleware/validate-request';
-import { favoriteSchemas } from '../../validators/favorite.schema';
 
 const router = Router();
 const favoriteController = new FavoriteController();

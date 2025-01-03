@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+/**
+ * Req Body Schemas for auth-related API endpoints.
+ */
 export const authSchemas = {
 	signup: z.object({
 		body: z.object({

@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+/**
+ * Req Body Schemas for album-related API endpoints.
+ */
 export const albumSchemas = {
 	getAlbums: z.object({
 		query: z.object({
