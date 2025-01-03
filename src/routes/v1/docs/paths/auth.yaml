@@ -1,0 +1,58 @@
+# paths/auth.yaml
+logout:
+  post:
+    tags:
+      - Auth
+    summary: Logout user
+    description: Ends the user session
+    responses:
+      '200':
+        description: Successfully logged out
+      '401':
+        description: Unauthorized
+
+signup:
+  post:
+    tags:
+      - Auth
+    summary: Register new user
+    description: Create a new user account
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+    responses:
+      '201':
+        description: User successfully created
+      '400':
+        description: Invalid input
+
+login:
+  post:
+    tags:
+      - Auth
+    summary: Login user
+    description: Authenticate user and create session
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+    responses:
+      '200':
+        description: Successfully logged in
+      '401':
+        description: Invalid credentials

@@ -1,0 +1,6 @@
+- name: Auth
+  description: Endpoints related to authentication and authorization.
+- name: Users
+  description: Endpoints for user management.
+- name: Music
+  description: Endpoints for managing artists, albums, and tracks.

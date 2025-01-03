@@ -1,0 +1,107 @@
+addUserRequest:
+  type: object
+  required:
+    - email
+    - password
+    - role
+  properties:
+    email:
+      type: string
+      format: email
+      example: user@example.com
+    password:
+      type: string
+      format: password
+      example: SecurePassword123
+    role:
+      type: string
+      enum: [Admin, Editor, Viewer]
+      example: Editor
+
+updatePasswordRequest:
+  type: object
+  required:
+    - old_password
+    - new_password
+  properties:
+    old_password:
+      type: string
+      format: password
+      example: OldPassword123
+    new_password:
+      type: string
+      format: password
+      example: NewSecurePassword456
+
+addArtistRequest:
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      example: Eminem
+    grammy:
+      type: boolean
+      example: true
+    hidden:
+      type: boolean
+      example: false
+
+addAlbumRequest:
+  type: object
+  required:
+    - artist_id
+    - name
+    - year
+  properties:
+    artist_id:
+      type: string
+      example: 123e4567-e89b-12d3-a456-426614174000
+    name:
+      type: string
+      example: Recovery
+    year:
+      type: integer
+      example: 2010
+    hidden:
+      type: boolean
+      example: false
+
+addTrackRequest:
+  type: object
+  required:
+    - artist_id
+    - album_id
+    - name
+    - duration
+  properties:
+    artist_id:
+      type: string
+      example: 123e4567-e89b-12d3-a456-426614174000
+    album_id:
+      type: string
+      example: 123e4567-e89b-12d3-a456-426614174000
+    name:
+      type: string
+      example: Not Afraid
+    duration:
+      type: integer
+      example: 263
+    hidden:
+      type: boolean
+      example: false
+
+addFavoriteRequest:
+  type: object
+  required:
+    - category
+    - item_id
+  properties:
+    category:
+      type: string
+      enum: [artist, album, track]
+      example: artist
+    item_id:
+      type: string
+      example: 123e4567-e89b-12d3-a456-426614174000

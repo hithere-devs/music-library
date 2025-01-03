@@ -3,562 +3,686 @@ info:
   title: Music Library Management API
   version: 1.0.0
   description: |
-    API for managing music library with artists, albums, tracks, and user management.
-    Provides functionality for user authentication, role-based access control, and
-    management of music library entities.
+    API for managing music library, including users, artists, albums, tracks,
+    and favorites.
 
 servers:
-  - url: '{baseUrl}'
-    variables:
-      baseUrl:
-        default: https://your-api-url.com/api/v1
-        description: Base URL for the API
+  - url: https://your-hosted-url/api/v1
 
 components:
   securitySchemes:
-    bearerAuth:
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
 
-  schemas:
-    Error:
-      type: object
-      properties:
-        status:
-          type: integer
-        data:
-          type: string
-          nullable: true
-        message:
-          type: string
-        error:
-          type: string
-          nullable: true
-
-    SuccessResponse:
-      type: object
-      properties:
-        status:
-          type: integer
-        data:
-          type: object
-        message:
-          type: string
-        error:
-          type: string
-
-    LoginRequest:
-      type: object
-      required:
-        - email
-        - password
-      properties:
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-
-    SignupRequest:
-      type: object
-      required:
-        - email
-        - password
-      properties:
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-
-    AddUserRequest:
-      type: object
-      required:
-        - email
-        - password
-        - role
-      properties:
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-        role:
-          type: string
-          enum: [editor, viewer]
-
-    UpdatePasswordRequest:
-      type: object
-      required:
-        - old_password
-        - new_password
-      properties:
-        old_password:
-          type: string
-        new_password:
-          type: string
-
-    ArtistRequest:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          type: string
-        grammy:
-          type: integer
-          minimum: 0
-        hidden:
-          type: boolean
-
-  responses:
-    BadRequest:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized access
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Forbidden access
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-
 security:
-  - bearerAuth: []
+  - BearerAuth: []
+
+tags:
+  - name: Authentication
+    description: API for user authentication
+  - name: Users
+    description: API for user management
+  - name: Artists
+    description: API for managing artists
+  - name: Albums
+    description: API for managing albums
+  - name: Tracks
+    description: API for managing tracks
+  - name: Favorites
+    description: API for managing user favorites
 
 paths:
   /logout:
     get:
-      summary: Logout user
-      tags:
-        - Authentication
+      summary: Logout a user
+      tags: [Authentication]
+      security:
+        - BearerAuth: []
       responses:
         '200':
-          description: User logged out successfully
+          description: User logged out successfully.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  data:
+                    type: object
+                    nullable: true
+                  message:
+                    type: string
+                  error:
+                    type: object
+                    nullable: true
         '400':
-          description: Bad request
+          description: Bad Request.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  data:
+                    type: object
+                    nullable: true
+                  message:
+                    type: string
+                  error:
+                    type: object
+                    nullable: true
 
   /signup:
     post:
-      summary: Register new user
-      tags:
-        - Authentication
-      security: []
+      summary: Register a new user
+      tags: [Authentication]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignupRequest'
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
       responses:
         '201':
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
+          description: User created successfully.
         '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Bad Request, Missing fields.
         '409':
-          description: Email already exists
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Email already exists.
 
   /login:
     post:
-      summary: Login user
-      tags:
-        - Authentication
-      security: []
+      summary: Login a user
+      tags: [Authentication]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
       responses:
         '200':
-          description: Login successful
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                  data:
-                    type: object
-                    properties:
-                      token:
-                        type: string
-                  message:
-                    type: string
-                  error:
-                    type: string
+          description: User logged in successfully.
         '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Bad Request, Missing fields.
         '404':
-          description: User not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: User not found.
 
   /users:
     get:
-      summary: Get all users
-      tags:
-        - Users
-      parameters:
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 5
-        - in: query
-          name: offset
-          schema:
-            type: integer
-            default: 0
-        - in: query
-          name: role
-          schema:
-            type: string
-            enum: [editor, viewer]
+      summary: Retrieve all users
+      tags: [Users]
+      security:
+        - BearerAuth: []
       responses:
         '200':
-          description: Users retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        user_id:
-                          type: string
-                          format: uuid
-                        email:
-                          type: string
-                        role:
-                          type: string
-                        created_at:
-                          type: string
-                          format: date-time
-                  message:
-                    type: string
-                  error:
-                    type: string
+          description: Users fetched successfully.
         '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Bad Request.
         '401':
-          description: Unauthorized access
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Unauthorized Access.
 
   /users/add-user:
     post:
-      summary: Add new user
-      tags:
-        - Users
+      summary: Add a new user
+      tags: [Users]
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddUserRequest'
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum: [editor, viewer]
       responses:
         '201':
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
+          description: User created successfully.
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request.
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized Access.
         '403':
-          $ref: '#/components/responses/Forbidden'
+          description: Forbidden Access.
         '409':
-          description: Email already exists
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: Email already exists.
 
   /users/{id}:
     delete:
-      summary: Delete user
-      tags:
-        - Users
+      summary: Delete a user
+      tags: [Users]
+      security:
+        - BearerAuth: []
       parameters:
-        - in: path
-          name: id
+        - name: id
+          in: path
           required: true
+          description: User ID
           schema:
             type: string
-            format: uuid
       responses:
         '200':
-          description: User deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
+          description: User deleted successfully.
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request.
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized Access.
         '403':
-          $ref: '#/components/responses/Forbidden'
+          description: Forbidden Access.
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: User not found.
 
-  /users/update-password:
     put:
       summary: Update user password
-      tags:
-        - Users
+      tags: [Users]
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdatePasswordRequest'
+              type: object
+              properties:
+                old_password:
+                  type: string
+                new_password:
+                  type: string
       responses:
         '204':
-          description: Password updated successfully
+          description: Password updated successfully.
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request.
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized Access.
         '403':
-          $ref: '#/components/responses/Forbidden'
+          description: Forbidden Access.
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: User not found.
 
   /artists:
     get:
-      summary: Get all artists
-      tags:
-        - Artists
-      parameters:
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 5
-        - in: query
-          name: offset
-          schema:
-            type: integer
-            default: 0
-        - in: query
-          name: grammy
-          schema:
-            type: integer
-        - in: query
-          name: hidden
-          schema:
-            type: boolean
+      summary: Retrieve all artists
+      tags: [Artists]
+      security:
+        - BearerAuth: []
       responses:
         '200':
-          description: Artists retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        artist_id:
-                          type: string
-                          format: uuid
-                        name:
-                          type: string
-                        grammy:
-                          type: integer
-                        hidden:
-                          type: boolean
-                  message:
-                    type: string
-                  error:
-                    type: string
+          description: Artists fetched successfully.
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request.
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized Access.
 
   /artists/{id}:
     get:
-      summary: Get artist by ID
-      tags:
-        - Artists
+      summary: Retrieve an artist
+      tags: [Artists]
+      security:
+        - BearerAuth: []
       parameters:
-        - in: path
-          name: id
+        - name: id
+          in: path
           required: true
+          description: Artist ID
           schema:
             type: string
-            format: uuid
       responses:
         '200':
-          description: Artist retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                  data:
-                    type: object
-                    properties:
-                      artist_id:
-                        type: string
-                        format: uuid
-                      name:
-                        type: string
-                      grammy:
-                        type: integer
-                      hidden:
-                        type: boolean
-                  message:
-                    type: string
-                  error:
-                    type: string
+          description: Artist fetched successfully.
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized Access.
         '403':
-          $ref: '#/components/responses/Forbidden'
+          description: Forbidden Access.
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Artist not found.
 
-    put:
-      summary: Update artist
-      tags:
-        - Artists
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ArtistRequest'
-      responses:
-        '204':
-          description: Artist updated successfully
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-
-    delete:
-      summary: Delete artist
-      tags:
-        - Artists
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: Artist deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-
-  /artists/add-artist:
     post:
-      summary: Add new artist
-      tags:
-        - Artists
+      summary: Add a new artist
+      tags: [Artists]
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ArtistRequest'
+              type: object
+              properties:
+                name:
+                  type: string
+                grammy:
+                  type: boolean
+                hidden:
+                  type: boolean
       responses:
         '201':
-          description: Artist created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
+          description: Artist created successfully.
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Bad Request.
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          description: Unauthorized Access.
+
+    put:
+      summary: Update an artist
+      tags: [Artists]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Artist ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                grammy:
+                  type: boolean
+                hidden:
+                  type: boolean
+      responses:
+        '204':
+          description: Artist updated successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Artist not found.
+
+    delete:
+      summary: Delete an artist
+      tags: [Artists]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Artist ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Artist deleted successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Artist not found.
+
+  /albums:
+    get:
+      summary: Retrieve all albums
+      tags: [Albums]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Albums fetched successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+
+  /albums/{id}:
+    get:
+      summary: Retrieve an album
+      tags: [Albums]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Album ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Album fetched successfully.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Resource Doesn't Exist.
+
+    post:
+      summary: Add a new album
+      tags: [Albums]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                artist_id:
+                  type: string
+                name:
+                  type: string
+                year:
+                  type: integer
+                hidden:
+                  type: boolean
+      responses:
+        '201':
+          description: Album created successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+
+    put:
+      summary: Update an album
+      tags: [Albums]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Album ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                year:
+                  type: integer
+                hidden:
+                  type: boolean
+      responses:
+        '204':
+          description: Album updated successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Resource Doesn't Exist.
+
+    delete:
+      summary: Delete an album
+      tags: [Albums]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Album ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Album deleted successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Resource Doesn't Exist.
+
+  /tracks:
+    get:
+      summary: Retrieve all tracks
+      tags: [Tracks]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Tracks fetched successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+
+  /tracks/{id}:
+    get:
+      summary: Retrieve a track
+      tags: [Tracks]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Track ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Track fetched successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Resource Doesn't Exist.
+
+    post:
+      summary: Add a new track
+      tags: [Tracks]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                artist_id:
+                  type: string
+                album_id:
+                  type: string
+                name:
+                  type: string
+                duration:
+                  type: integer
+                hidden:
+                  type: boolean
+      responses:
+        '201':
+          description: Track created successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+
+    put:
+      summary: Update a track
+      tags: [Tracks]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Track ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                duration:
+                  type: integer
+                hidden:
+                  type: boolean
+      responses:
+        '204':
+          description: Track updated successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Resource Doesn't Exist.
+
+    delete:
+      summary: Delete a track
+      tags: [Tracks]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Track ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Track deleted successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Resource Doesn't Exist.
+
+  /favorites/{category}:
+    get:
+      summary: Retrieve favorites by category
+      tags: [Favorites]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: category
+          in: path
+          required: true
+          description: Category of favorites (artist, album, track)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Favorites fetched successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+
+    post:
+      summary: Add a favorite item
+      tags: [Favorites]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  enum: [artist, album, track]
+                item_id:
+                  type: string
+      responses:
+        '201':
+          description: Favorite added successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+
+  /favorites/remove-favorite/{id}:
+    delete:
+      summary: Remove a favorite item
+      tags: [Favorites]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Favorite ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Favorite removed successfully.
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized Access.
+        '403':
+          description: Forbidden Access.
+        '404':
+          description: Resource Doesn't Exist.

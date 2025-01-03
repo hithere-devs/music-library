@@ -1,0 +1,41 @@
+list:
+  get:
+    summary: Retrieve all users
+    description:
+      Fetches a list of all users in the system. Admin access required.
+    tags:
+      - Users
+    parameters:
+      - name: limit
+        in: query
+        description: Number of users to return.
+        required: false
+        schema:
+          type: integer
+          default: 5
+      - name: offset
+        in: query
+        description: Number of users to skip.
+        required: false
+        schema:
+          type: integer
+          default: 0
+    responses:
+      200:
+        # $ref: ../components/responses.yaml#/ok
+      401:
+        # $ref: ../components/responses.yaml#/unauthorized
+      403:
+        # $ref: ../components/responses.yaml#/forbidden
+add:
+  post:
+    summary: Add a new user
+    description: Allows an admin to add a new user.
+    tags:
+      - Users
+    requestBody:
+      $ref: ../components/schemas.yaml#/addUserRequest
+    responses:
+      201:
+        # $ref: ../components/schemas.yaml#/created
+      400:
