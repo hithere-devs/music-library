@@ -10,7 +10,7 @@ import Track from './track.model';
 class Artist extends Model {
 	public id!: string;
 	public name!: string;
-	public grammy!: boolean;
+	public grammy!: number;
 	public hidden!: boolean;
 	public created_at!: Date;
 	public updated_at!: Date;
@@ -31,7 +31,7 @@ Artist.init(
 			allowNull: false,
 		},
 		grammy: {
-			type: DataTypes.BOOLEAN,
+			type: DataTypes.INTEGER,
 			defaultValue: false,
 		},
 		hidden: {
